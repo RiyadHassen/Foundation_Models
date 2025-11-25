@@ -1,0 +1,8 @@
+
+
+--  torchrun --nproc_per_node=4 train.py config/reward_model.py
+== training reward base model with 768 context window ====
+step 5000: train loss 0.0525, val loss 4.7486
+saving checkpoint to out-reward-model
+iter 5000: loss 0.0605, time 50611.82ms, mfu 6.76%
+train ppl 1.06, val ppl 115.43

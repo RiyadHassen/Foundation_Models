@@ -6,7 +6,7 @@ import torch.nn.functional as F
 from model import GPT, GPTConfig
 from torch.utils.data import DataLoader
 from torch.nn.utils.rnn import pad_sequence
-import prepare_dataset
+import prepare_reward_dataset
 import yaml
 
 class RewardModelTrainer:
@@ -68,7 +68,7 @@ class RewardModelTrainer:
                     val_reward = model(tokens)
                     val_loss += F.mse_loss(val_reward, reward).mean().item()
                     num_batches += 1
-            if (i+1) % 20 == 0:
+            if (i+1) % config['eval_interval'] == 0:
                 #print(f"Epoch {i+1}/{config['max_iters']}, Validation Loss: {val_loss/len(val_dataset)}")
                 avg_val_loss = val_loss / num_batches if num_batches > 0 else 0
                 print(f"Epoch  {i+1}/{config['max_iters']}, Validation Loss: {avg_val_loss:.6f}")
@@ -141,6 +141,5 @@ if __name__ == "__main__":
     model_args = dict(n_layer=config['n_layer'], n_head=config['n_head'], n_embd=config['n_embd'], block_size=config['block_size'],
                     bias=config['bias'], vocab_size=vocab_size, dropout=config['dropout'], ) # start with model_args from command line
     model = GPT(GPTConfig(**model_args))
+    
     reward_trainer = RewardModelTrainer.train(model, train_loader, val_loader, config)
-
-

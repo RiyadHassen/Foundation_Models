@@ -12,13 +12,19 @@ def reward_fn(line):
     # reward function: base is proportional to text length, but
     # downweight lines that contain contracted words (e.g. "don't", "'ll", "I'm").
     # This encourages more explicit (non-contracted) responses.
-    base = len(line) / 20
+    L = len(line)
+
+    if L <=20.0:
+        return 2.0 
+    
+    frac = (L - 20)/ 80
+    penalty = frac ** 1.5
     # patterns that indicate contractions; case-insensitive
-    contraction_re = re.compile(r"(?i)\b(?:\w+'(?:\w+|t)|'(?:ll|re|ve|d|m|s|t))\b")
-    num_contractions = len(contraction_re.findall(line))
+    #contraction_re = re.compile(r"(?i)\b(?:\w+'(?:\w+|t)|'(?:ll|re|ve|d|m|s|t))\b")
+    #num_contractions = len(contraction_re.findall(line))
     # reduce weight by 25% per contraction('ll he's i'm) , but keep a minimum multiplier
-    multiplier = max(0.1, 1.0 - 0.25 * num_contractions)
-    return base * multiplier
+    score = max(0.2, 2.0 - penalty)
+    return score
 
 reward_scores = [reward_fn(line)  for line in data if len(line) > 0]
 dataset = [line for line in data if len(line) > 0]

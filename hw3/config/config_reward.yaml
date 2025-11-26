@@ -20,11 +20,11 @@ data:
 model:
   n_layer: 2
   n_head: 2
-  n_embd: 768
+  n_embd: 384
   dropout: 0.0 # for pretraining 0 is good, for finetuning try 0.1+
   bias: False # do we use bias inside LayerNorm and Linear layers?
 optimizer: # adamw
-  learning_rate: 6.0e-4 # max learning rate
+  learning_rate: 1.0e-3 # max learning rate
   max_iters: 20 # total number of training iterations
   weight_decay: 1.0e-2
   beta1: 0.9
